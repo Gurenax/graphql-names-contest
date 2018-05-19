@@ -9,7 +9,7 @@ const {
 // const pgdb = require('../../database/pgdb')
 
 module.exports = new GraphQLObjectType({
-  name: 'ContestType',
+  name: 'Contest',
 
   fields: () => {
     const ContestStatusType = require('./contest-status')
