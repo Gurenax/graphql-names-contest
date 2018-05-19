@@ -125,6 +125,22 @@ module.exports = pgPool => {
       `, [apiKey, contestId, title, description, slug(title)]).then(res => {
         return humps.camelizeKeys(res.rows[0])
       })
+    },
+
+    getActivitiesForUserIds(userIds) {
+      return pgPool.query(`
+        select id, created_by, created_at, label, '' as title,
+                'name' as activity_type
+        from names
+        where created_by = ANY($1)
+        union
+        select id, created_by, created_at, '' as label, title,
+                'contest' as activity_type
+        from contests
+        where created_by = ANY($1)
+      `, [userIds]).then(res => {
+        return orderedFor(res.rows, userIds, 'createdBy', false)
+      })
     }
   }
 }
